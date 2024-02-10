@@ -6,37 +6,32 @@ class DivideCircle(Scene):
         circle = Circle(radius=2, color=WHITE)
         self.play(Create(circle))
 
-        # Divide the circle into 2 parts
-        div_2 = VGroup(*[Line(circle.point_at_angle(i*TAU/2), circle.point_at_angle((i+1)*TAU/2)) for i in range(2)])
+        # Find center and endpoints of the diameter
+        center = circle.get_center()
+        diameter = Line(circle.get_start(), circle.get_end())
+
+        # Divide the circle into 2 parts using the diameter
+        div_2 = VGroup(diameter)
         self.play(Create(div_2))
 
-        # Divide the circle into 3 parts
-        div_3 = VGroup(*[Line(circle.point_at_angle(i*TAU/3), circle.point_at_angle((i+1)*TAU/3)) for i in range(3)])
-        self.play(Create(div_3))
+        # Section the circle into equal parts
+        num_parts = 2
+        div_angle = TAU / num_parts
+        div_lines = VGroup(*[Line(center, circle.point_at_angle(i * div_angle)) for i in range(1, num_parts)])
+        self.play(*[Create(line) for line in div_lines])
 
-        # Divide the circle into 4 parts
-        div_4 = VGroup(*[Line(circle.point_at_angle(i*TAU/4), circle.point_at_angle((i+1)*TAU/4)) for i in range(4)])
-        self.play(Create(div_4))
+        # Update num_parts for subsequent divisions
+        num_parts *= 2
 
-        # Divide the circle into 5 parts
-        div_5 = VGroup(*[Line(circle.point_at_angle(i*TAU/5), circle.point_at_angle((i+1)*TAU/5)) for i in range(5)])
-        self.play(Create(div_5))
+        for _ in range(2, num_parts):
+            # Create new division lines
+            div_lines = VGroup(*[Line(center, circle.point_at_angle(i * div_angle)) for i in range(1, num_parts)])
 
-        # Divide the circle into 6 parts
-        div_6 = VGroup(*[Line(circle.point_at_angle(i*TAU/6), circle.point_at_angle((i+1)*TAU/6)) for i in range(6)])
-        self.play(Create(div_6))
+            # Display the division lines
+            self.play(*[Create(line) for line in div_lines])
 
-        # Divide the circle into 8 parts
-        div_8 = VGroup(*[Line(circle.point_at_angle(i*TAU/8), circle.point_at_angle((i+1)*TAU/8)) for i in range(8)])
-        self.play(Create(div_8))
-
-        # Divide the circle into 9 parts
-        div_9 = VGroup(*[Line(circle.point_at_angle(i*TAU/9), circle.point_at_angle((i+1)*TAU/9)) for i in range(9)])
-        self.play(Create(div_9))
-
-        # Divide the circle into 10 parts
-        div_10 = VGroup(*[Line(circle.point_at_angle(i*TAU/10), circle.point_at_angle((i+1)*TAU/10)) for i in range(10)])
-        self.play(Create(div_10))
+            # Update the division angle for the next iteration
+            div_angle = TAU / num_parts
 
         self.wait()
 
